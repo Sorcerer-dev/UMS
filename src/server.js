@@ -7,7 +7,7 @@ const app = express();
 
 // Security middleware
 app.use(helmet());
-app.use(cors());
+app.use(cors({ origin: '*' }));
 app.use(express.json());
 
 // Routes
@@ -16,12 +16,14 @@ const usersRoutes = require('./modules/users/users.routes');
 const permissionsRoutes = require('./modules/permissions/permissions.routes');
 const channelsRoutes = require('./modules/communication/channels.routes');
 const departmentsRoutes = require('./modules/departments/departments.routes');
+const noticesRoutes = require('./modules/notices/notices.routes');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/users', usersRoutes);
 app.use('/api/permissions', permissionsRoutes);
 app.use('/api/channels', channelsRoutes);
 app.use('/api/departments', departmentsRoutes);
+app.use('/api/notices', noticesRoutes);
 
 // Basic health check endpoint
 app.get('/health', (req, res) => {

@@ -19,7 +19,9 @@ class AuthService {
             {
                 id: user.id,
                 tag: user.tag,
-                department_id: user.department_id
+                department_id: user.department_id,
+                batch: user.batch,
+                status: user.status
             },
             process.env.JWT_SECRET || 'fallback_secret_key_for_dev_only',
             { expiresIn: '8h' }
@@ -31,7 +33,10 @@ class AuthService {
                 id: user.id,
                 email: user.email,
                 tag: user.tag,
-                department_id: user.department_id
+                department_id: user.department_id,
+                batch: user.batch,
+                status: user.status,
+                profile_data: user.profile_data
             }
         };
     }

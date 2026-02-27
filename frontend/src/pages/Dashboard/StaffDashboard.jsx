@@ -22,27 +22,27 @@ export const StaffDashboard = () => {
     return (
         <div className="space-y-6">
             <div className="mb-6">
-                <h2 className="text-2xl font-bold text-slate-800">Staff Portal</h2>
-                <p className="text-slate-500 text-sm mt-1">Quick actions and daily academic tasks.</p>
+                <h2 className="text-2xl font-bold text-slate-800 dark:text-white">Staff Portal</h2>
+                <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">Quick actions and daily academic tasks.</p>
             </div>
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
                 {actions.map((action) => (
                     <button
                         key={action.name}
-                        className="group flex flex-col items-center justify-center p-6 bg-white border border-slate-200 rounded-xl shadow-sm hover:border-primary hover:shadow-md transition-all text-center"
+                        className="group flex flex-col items-center justify-center p-6 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-sm hover:border-primary dark:hover:border-primary hover:shadow-md transition-all text-center"
                     >
-                        <div className={`p-4 rounded-full ${action.bg} mb-4 group-hover:scale-110 transition-transform`}>
-                            <action.icon className={`h-8 w-8 ${action.color}`} strokeWidth={1.5} />
+                        <div className={`p-4 rounded-full ${action.bg} mb-4 group-hover:scale-110 transition-transform ${action.bg.includes('blue') ? 'dark:bg-blue-900/30' : action.bg.includes('indigo') ? 'dark:bg-indigo-900/30' : 'dark:bg-amber-900/30'}`}>
+                            <action.icon className={`h-8 w-8 ${action.color} ${action.color.includes('blue') ? 'dark:text-blue-400' : action.color.includes('indigo') ? 'dark:text-indigo-400' : 'dark:text-amber-400'}`} strokeWidth={1.5} />
                         </div>
-                        <span className="font-semibold text-slate-700 group-hover:text-primary">{action.name}</span>
+                        <span className="font-semibold text-slate-700 dark:text-slate-200 group-hover:text-primary dark:group-hover:text-primary-light">{action.name}</span>
                     </button>
                 ))}
             </div>
 
-            <div className="mt-8 bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
-                <div className="px-6 py-5 border-b border-slate-100 flex justify-between items-center">
-                    <h3 className="text-lg font-medium text-slate-800">Permission Delegation</h3>
+            <div className="mt-8 bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 overflow-hidden">
+                <div className="px-6 py-5 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center">
+                    <h3 className="text-lg font-medium text-slate-800 dark:text-white">Permission Delegation</h3>
                     <button
                         onClick={handleDelegate}
                         className="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-full shadow-sm text-white bg-amber-600 hover:bg-amber-700"
@@ -50,7 +50,7 @@ export const StaffDashboard = () => {
                         <KeyRound className="h-3 w-3 mr-1" /> Delegate CR Access
                     </button>
                 </div>
-                <div className="p-6 text-sm text-slate-500">
+                <div className="p-6 text-sm text-slate-500 dark:text-slate-400">
                     Use the delegation button to grant a student temporary Write-Access for attendance marking directly reflecting the Phase 5 temporary permission architecture.
                 </div>
             </div>

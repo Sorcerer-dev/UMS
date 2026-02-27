@@ -82,14 +82,14 @@ export function UserProfileModal({ isOpen, onClose }) {
 
                 <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
 
-                <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-md sm:w-full text-slate-800">
-                    <div className="bg-slate-50 border-b border-slate-200 px-4 py-4 sm:px-6 flex justify-between items-center">
-                        <h3 className="text-lg leading-6 font-medium text-slate-900" id="modal-title">
+                <div className="inline-block align-bottom bg-white dark:bg-slate-800 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-md sm:w-full text-slate-800 dark:text-slate-200">
+                    <div className="bg-slate-50 dark:bg-slate-900/50 border-b border-slate-200 dark:border-slate-700 px-4 py-4 sm:px-6 flex justify-between items-center">
+                        <h3 className="text-lg leading-6 font-medium text-slate-900 dark:text-white" id="modal-title">
                             User Profile
                         </h3>
                         <button
                             onClick={onClose}
-                            className="bg-slate-50 rounded-md text-slate-400 hover:text-slate-500 focus:outline-none"
+                            className="bg-transparent rounded-md text-slate-400 hover:text-slate-500 dark:hover:text-slate-300 focus:outline-none"
                         >
                             <X className="h-5 w-5" aria-hidden="true" />
                         </button>
@@ -97,21 +97,21 @@ export function UserProfileModal({ isOpen, onClose }) {
 
                     <div className="px-4 py-5 sm:p-6">
                         <div className="flex items-center space-x-4 mb-6">
-                            <div className="h-16 w-16 rounded-full bg-primary-100 flex items-center justify-center text-2xl font-bold text-primary">
+                            <div className="h-16 w-16 rounded-full bg-primary-100 dark:bg-primary/20 flex items-center justify-center text-2xl font-bold text-primary dark:text-primary-light">
                                 {user?.name ? user.name.charAt(0).toUpperCase() : user?.email?.charAt(0).toUpperCase()}
                             </div>
                             <div>
-                                <h4 className="text-lg font-bold text-slate-900">{user?.name || user?.email?.split('@')[0]}</h4>
-                                <p className="text-sm text-slate-500">{user?.email}</p>
-                                <span className="inline-flex mt-1 items-center px-2 py-0.5 rounded text-xs font-medium bg-indigo-100 text-indigo-800">
+                                <h4 className="text-lg font-bold text-slate-900 dark:text-white">{user?.name || user?.email?.split('@')[0]}</h4>
+                                <p className="text-sm text-slate-500 dark:text-slate-400">{user?.email}</p>
+                                <span className="inline-flex mt-1 items-center px-2 py-0.5 rounded text-xs font-medium bg-indigo-100 dark:bg-indigo-900/30 text-indigo-800 dark:text-indigo-300">
                                     {user?.tag}
                                 </span>
                             </div>
                         </div>
 
-                        <div className="border-t border-slate-200 pt-6">
-                            <h4 className="text-sm font-semibold text-slate-900 flex items-center mb-4">
-                                <Lock className="w-4 h-4 mr-2 text-slate-500" />
+                        <div className="border-t border-slate-200 dark:border-slate-700 pt-6">
+                            <h4 className="text-sm font-semibold text-slate-900 dark:text-white flex items-center mb-4">
+                                <Lock className="w-4 h-4 mr-2 text-slate-500 dark:text-slate-400" />
                                 Change Password
                             </h4>
 
@@ -129,26 +129,26 @@ export function UserProfileModal({ isOpen, onClose }) {
 
                             <form onSubmit={handleChangePassword} className="space-y-4">
                                 <div>
-                                    <label className="block text-sm font-medium text-slate-700">Current Password</label>
+                                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">Current Password</label>
                                     <input
                                         type="password" required
-                                        className="mt-1 block w-full border border-slate-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
+                                        className="mt-1 block w-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
                                         value={currentPassword} onChange={e => setCurrentPassword(e.target.value)}
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-slate-700">New Password</label>
+                                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">New Password</label>
                                     <input
                                         type="password" required
-                                        className="mt-1 block w-full border border-slate-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
+                                        className="mt-1 block w-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
                                         value={newPassword} onChange={e => setNewPassword(e.target.value)}
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-slate-700">Confirm New Password</label>
+                                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">Confirm New Password</label>
                                     <input
                                         type="password" required
-                                        className="mt-1 block w-full border border-slate-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
+                                        className="mt-1 block w-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
                                         value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)}
                                     />
                                 </div>
@@ -167,18 +167,18 @@ export function UserProfileModal({ isOpen, onClose }) {
                         </div>
                     </div>
 
-                    <div className="bg-slate-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse border-t border-slate-200">
+                    <div className="bg-slate-50 dark:bg-slate-900/50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse border-t border-slate-200 dark:border-slate-700">
                         <button
                             type="button"
                             onClick={handleLogout}
-                            className="w-full inline-flex justify-center rounded-md border border-slate-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-red-600 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm items-center"
+                            className="w-full inline-flex justify-center rounded-md border border-slate-300 dark:border-slate-600 shadow-sm px-4 py-2 bg-white dark:bg-slate-800 text-base font-medium text-red-600 dark:text-red-400 hover:bg-slate-50 dark:hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-slate-900 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm items-center transition-colors"
                         >
                             <LogOut className="w-4 h-4 mr-2" />
                             Log Out securely
                         </button>
                         <button
                             type="button"
-                            className="mt-3 w-full inline-flex justify-center rounded-md text-slate-500 hover:text-slate-700 px-4 py-2 text-base font-medium sm:mt-0 sm:w-auto sm:text-sm"
+                            className="mt-3 w-full inline-flex justify-center rounded-md text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 px-4 py-2 text-base font-medium sm:mt-0 sm:w-auto sm:text-sm transition-colors"
                             onClick={onClose}
                         >
                             Close

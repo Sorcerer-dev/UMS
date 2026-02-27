@@ -27,22 +27,22 @@ export default function Login() {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-background px-4 sm:px-6 lg:px-8">
-            <div className="max-w-md w-full space-y-8 bg-white p-10 shadow-xl rounded-xl border border-slate-100">
+        <div className="min-h-screen flex items-center justify-center bg-background dark:bg-slate-900 px-4 sm:px-6 lg:px-8 transition-colors duration-200">
+            <div className="max-w-md w-full space-y-8 bg-white dark:bg-slate-800 p-10 shadow-xl rounded-xl border border-slate-100 dark:border-slate-700">
                 <div>
-                    <div className="mx-auto h-12 w-12 bg-primary-50 rounded-full flex items-center justify-center">
-                        <Lock className="h-6 w-6 text-primary" strokeWidth={1.5} />
+                    <div className="mx-auto h-12 w-12 bg-primary-50 dark:bg-primary-900/30 rounded-full flex items-center justify-center">
+                        <Lock className="h-6 w-6 text-primary dark:text-primary-light" strokeWidth={1.5} />
                     </div>
-                    <h2 className="mt-6 text-center text-3xl font-extrabold text-slate-900 tracking-tight">
+                    <h2 className="mt-6 text-center text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
                         UMS Login Portal
                     </h2>
-                    <p className="mt-2 text-center text-sm text-slate-500">
+                    <p className="mt-2 text-center text-sm text-slate-500 dark:text-slate-400">
                         Authorized Personnel Only
                     </p>
                 </div>
 
                 {error && (
-                    <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-md text-sm text-center">
+                    <div className="bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 px-4 py-3 rounded-md text-sm text-center">
                         {error}
                     </div>
                 )}
@@ -56,7 +56,7 @@ export default function Login() {
                                 name="email"
                                 type="email"
                                 required
-                                className="appearance-none rounded-none relative block w-full px-3 py-3 border border-slate-300 placeholder-slate-400 text-slate-900 rounded-t-md focus:outline-none focus:ring-primary focus:border-primary focus:z-10 sm:text-sm"
+                                className="appearance-none rounded-none relative block w-full px-3 py-3 border border-slate-300 dark:border-slate-600 placeholder-slate-400 text-slate-900 dark:text-white bg-white dark:bg-slate-700 rounded-t-md focus:outline-none focus:ring-primary focus:border-primary focus:z-10 sm:text-sm transition-colors"
                                 placeholder="Institutional Email"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
@@ -69,7 +69,7 @@ export default function Login() {
                                 name="password"
                                 type="password"
                                 required
-                                className="appearance-none rounded-none relative block w-full px-3 py-3 border border-slate-300 placeholder-slate-400 text-slate-900 rounded-b-md focus:outline-none focus:ring-primary focus:border-primary focus:z-10 sm:text-sm"
+                                className="appearance-none rounded-none relative block w-full px-3 py-3 border border-slate-300 dark:border-slate-600 placeholder-slate-400 text-slate-900 dark:text-white bg-white dark:bg-slate-700 rounded-b-md focus:outline-none focus:ring-primary focus:border-primary focus:z-10 sm:text-sm transition-colors"
                                 placeholder="Password"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
@@ -79,7 +79,7 @@ export default function Login() {
 
                     <div className="flex items-center justify-between">
                         <div className="text-sm">
-                            <a href="#" className="font-medium text-primary hover:text-primary-dark">
+                            <a href="#" className="font-medium text-primary dark:text-primary-light hover:text-primary-dark dark:hover:text-primary transition-colors">
                                 Forgot password or Contact Admin?
                             </a>
                         </div>

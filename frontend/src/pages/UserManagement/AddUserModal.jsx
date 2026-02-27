@@ -26,10 +26,10 @@ export const AddUserModal = ({ isOpen, onClose, onAdd, fixedTag, fixedDepartment
     const addingTopAdmin = ['Root Admin', 'Managing Director', 'Admin'].includes(formData.tag);
 
     const actualDept = addingTopAdmin ? null : (isTopAdmin ? formData.department : user.department_id);
-    const uniqueBatches = [...new Set((users || [])
-        .filter(u => u.tag === 'Student' && u.department_id === actualDept && u.batch)
+    const uniqueBatches = actualDept ? [...new Set((users || [])
+        .filter(u => u.tag === 'Student' && (String(u.department_id) === String(actualDept) || String(u.department) === String(actualDept)) && u.batch)
         .map(u => u.batch)
-    )].sort();
+    )].sort() : [];
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -91,21 +91,21 @@ export const AddUserModal = ({ isOpen, onClose, onAdd, fixedTag, fixedDepartment
 
                 <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
 
-                <div className="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:p-6 text-slate-800">
+                <div className="inline-block align-bottom bg-white dark:bg-slate-800 rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:p-6 text-slate-800 dark:text-slate-200">
                     <div className="absolute top-0 right-0 pt-4 pr-4">
                         <button
                             onClick={onClose}
-                            className="bg-white rounded-md text-slate-400 hover:text-slate-500 focus:outline-none"
+                            className="bg-transparent rounded-md text-slate-400 hover:text-slate-500 focus:outline-none"
                         >
                             <X className="h-6 w-6" aria-hidden="true" />
                         </button>
                     </div>
                     <div className="sm:flex sm:items-start">
                         <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
-                            <h3 className="text-lg leading-6 font-medium text-slate-900" id="modal-title">
+                            <h3 className="text-lg leading-6 font-medium text-slate-900 dark:text-white" id="modal-title">
                                 Add New Personnel
                             </h3>
-                            <div className="mt-2 text-sm text-slate-500">
+                            <div className="mt-2 text-sm text-slate-500 dark:text-slate-400">
                                 You can only create accounts for hierarchy levels structurally below your own ({user.tag}).
                             </div>
                             {error && (
@@ -115,36 +115,36 @@ export const AddUserModal = ({ isOpen, onClose, onAdd, fixedTag, fixedDepartment
                             )}
                             <form onSubmit={handleSubmit} className="mt-6 space-y-4">
                                 <div>
-                                    <label className="block text-sm font-medium text-slate-700">Full Name</label>
+                                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">Full Name</label>
                                     <input
                                         type="text" required
-                                        className="mt-1 block w-full border border-slate-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
+                                        className="mt-1 block w-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
                                         value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })}
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-slate-700">Email</label>
+                                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">Email</label>
                                     <input
                                         type="email" required
-                                        className="mt-1 block w-full border border-slate-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
+                                        className="mt-1 block w-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
                                         value={formData.email} onChange={e => setFormData({ ...formData, email: e.target.value })}
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-slate-700">Temporary Password</label>
+                                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">Temporary Password</label>
                                     <input
                                         type="text" required
                                         placeholder="User must change on first login"
-                                        className="mt-1 block w-full border border-slate-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
+                                        className="mt-1 block w-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
                                         value={formData.password} onChange={e => setFormData({ ...formData, password: e.target.value })}
                                     />
                                 </div>
                                 {!fixedTag && (
                                     <div>
-                                        <label className="block text-sm font-medium text-slate-700">Hierarchy Tag</label>
+                                        <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">Hierarchy Tag</label>
                                         <select
                                             required
-                                            className="mt-1 block w-full border border-slate-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
+                                            className="mt-1 block w-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
                                             value={formData.tag} onChange={e => setFormData({ ...formData, tag: e.target.value })}
                                         >
                                             <option value="">Select a Tag Level</option>
@@ -159,38 +159,40 @@ export const AddUserModal = ({ isOpen, onClose, onAdd, fixedTag, fixedDepartment
 
                                 {formData.tag === 'Student' && (
                                     <div>
-                                        <label className="block text-sm font-medium text-slate-700">Batch</label>
-                                        <input
-                                            type="text" required
-                                            list="batch-options"
-                                            placeholder="Select existing or type a new one..."
-                                            className="mt-1 block w-full border border-slate-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
+                                        <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">Batch</label>
+                                        <select
+                                            required
+                                            className="mt-1 block w-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
                                             value={formData.batch} onChange={e => setFormData({ ...formData, batch: e.target.value })}
-                                        />
-                                        <datalist id="batch-options">
-                                            {uniqueBatches.map(b => <option key={b} value={b} />)}
-                                        </datalist>
+                                        >
+                                            <option value="">Select a Batch</option>
+                                            {uniqueBatches.length > 0 ? (
+                                                uniqueBatches.map(b => <option key={b} value={b}>{b}</option>)
+                                            ) : (
+                                                <option disabled value="">No batches available</option>
+                                            )}
+                                        </select>
                                     </div>
                                 )}
 
                                 {/* Dynamic Logic based on Selected Tag */}
                                 {addingTopAdmin ? (
                                     <div>
-                                        <label className="block text-sm font-medium text-slate-700">Admin Type</label>
+                                        <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">Admin Type</label>
                                         <input
                                             type="text" required
                                             placeholder="e.g. Office, HR, MD"
-                                            className="mt-1 block w-full border border-slate-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
+                                            className="mt-1 block w-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
                                             value={formData.adminType} onChange={e => setFormData({ ...formData, adminType: e.target.value })}
                                         />
-                                        <p className="mt-1 text-xs text-slate-500">Top-level tags do not belong to academic departments.</p>
+                                        <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">Top-level tags do not belong to academic departments.</p>
                                     </div>
                                 ) : !fixedDepartment && isTopAdmin ? (
                                     <div>
-                                        <label className="block text-sm font-medium text-slate-700">Department</label>
+                                        <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">Department</label>
                                         <select
                                             required
-                                            className="mt-1 block w-full border border-slate-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
+                                            className="mt-1 block w-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
                                             value={formData.department} onChange={e => setFormData({ ...formData, department: e.target.value })}
                                         >
                                             <option value="">Select a Department</option>
@@ -200,9 +202,9 @@ export const AddUserModal = ({ isOpen, onClose, onAdd, fixedTag, fixedDepartment
                                         </select>
                                     </div>
                                 ) : !fixedDepartment && (
-                                    <div className="bg-slate-50 p-3 rounded-md border border-slate-200">
-                                        <span className="block text-xs text-slate-500 font-medium">Auto-Inherited Department</span>
-                                        <span className="block text-sm font-semibold text-slate-800">{user.department_id}</span>
+                                    <div className="bg-slate-50 dark:bg-slate-900/50 p-3 rounded-md border border-slate-200 dark:border-slate-700">
+                                        <span className="block text-xs text-slate-500 dark:text-slate-400 font-medium">Auto-Inherited Department</span>
+                                        <span className="block text-sm font-semibold text-slate-800 dark:text-white">{user.department_id}</span>
                                     </div>
                                 )}
 
@@ -215,7 +217,7 @@ export const AddUserModal = ({ isOpen, onClose, onAdd, fixedTag, fixedDepartment
                                     </button>
                                     <button
                                         type="button"
-                                        className="mt-3 w-full inline-flex justify-center rounded-md border border-slate-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-slate-700 hover:bg-slate-50 focus:outline-none sm:mt-0 sm:w-auto sm:text-sm"
+                                        className="mt-3 w-full inline-flex justify-center rounded-md border border-slate-300 dark:border-slate-600 shadow-sm px-4 py-2 bg-white dark:bg-slate-800 text-base font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 focus:outline-none sm:mt-0 sm:w-auto sm:text-sm"
                                         onClick={onClose}
                                     >
                                         Cancel

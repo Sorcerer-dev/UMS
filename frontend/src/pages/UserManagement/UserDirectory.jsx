@@ -9,6 +9,7 @@ export default function UserDirectory() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [viewMode, setViewMode] = useState('categories'); // 'categories', 'staff', 'students'
     const [selectedBatch, setSelectedBatch] = useState('');
+    const [selectedDeptForStudents, setSelectedDeptForStudents] = useState(null);
     const [isLoading, setIsLoading] = useState(false); // Can keep for other purposes or remove
     const [selectedUserProfile, setSelectedUserProfile] = useState(null);
 
@@ -52,8 +53,12 @@ export default function UserDirectory() {
         }
     };
 
-    // Extract unique batches from students
-    const batches = [...new Set(users.filter(u => u.tag === 'Student' && u.batch).map(u => u.batch))].sort();
+    // Extract unique batches from students based on selected dept if any
+    const batches = [...new Set(users.filter(u =>
+        u.tag === 'Student' &&
+        u.batch &&
+        (!selectedDeptForStudents || u.department_id === selectedDeptForStudents || u.department === selectedDeptForStudents)
+    ).map(u => u.batch))].sort();
 
     const visibleUsers = users.filter(user => {
         // Exclude dummy batch anchors from table view
@@ -64,7 +69,13 @@ export default function UserDirectory() {
         if (viewMode === 'staff') return user.tag !== 'Student';
         if (viewMode === 'students') {
             if (user.tag !== 'Student') return false;
-            if (selectedBatch) return user.batch === selectedBatch;
+            if (selectedDeptForStudents && user.department_id !== selectedDeptForStudents && user.department !== selectedDeptForStudents) return false;
+            if (selectedBatch && user.batch !== selectedBatch) return false;
+
+            // By default, only show active students UNLESS both department and batch are selected.
+            if (!(selectedDeptForStudents && selectedBatch) && user.status !== 'Active') {
+                return false;
+            }
             return true;
         }
         return false;
@@ -74,8 +85,8 @@ export default function UserDirectory() {
         <div className="space-y-6">
             <div className="sm:flex sm:items-center sm:justify-between">
                 <div>
-                    <h2 className="text-2xl font-bold text-slate-800">User Directory</h2>
-                    <p className="mt-1 text-sm text-slate-500">
+                    <h2 className="text-2xl font-bold text-slate-800 dark:text-white">User Directory</h2>
+                    <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
                         A list of all personnel in your authorized scope.
                     </p>
                 </div>
@@ -86,14 +97,18 @@ export default function UserDirectory() {
                         </div>
                         <input
                             type="text"
-                            className="block w-full pl-10 sm:text-sm border-slate-300 rounded-md focus:ring-primary focus:border-primary py-2 px-3 border"
+                            className="block w-full pl-10 sm:text-sm border-slate-300 dark:border-slate-600 dark:bg-slate-800 dark:text-white rounded-md focus:ring-primary focus:border-primary py-2 px-3 border"
                             placeholder="Search users..."
                         />
                     </div>
                     {viewMode !== 'categories' && (
                         <button
-                            onClick={() => { setViewMode('categories'); setSelectedBatch(''); }}
-                            className="inline-flex items-center justify-center px-4 py-2 border border-slate-300 rounded-md shadow-sm text-sm font-medium text-slate-700 bg-white hover:bg-slate-50 focus:outline-none"
+                            onClick={() => {
+                                setViewMode('categories');
+                                setSelectedBatch('');
+                                setSelectedDeptForStudents(null);
+                            }}
+                            className="inline-flex items-center justify-center px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-md shadow-sm text-sm font-medium text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 focus:outline-none"
                         >
                             <ArrowLeft className="-ml-1 mr-2 h-5 w-5" aria-hidden="true" />
                             Back
@@ -113,43 +128,61 @@ export default function UserDirectory() {
                 <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:gap-8">
                     <button
                         onClick={() => setViewMode('students')}
-                        className="relative rounded-lg border border-slate-300 bg-white px-6 py-8 shadow-sm flex items-center space-x-4 hover:border-primary hover:ring-1 hover:ring-primary focus:outline-none transition-all group"
+                        className="relative rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-6 py-8 shadow-sm flex items-center space-x-4 hover:border-primary hover:ring-1 hover:ring-primary focus:outline-none transition-all group"
                     >
-                        <div className="flex-shrink-0 bg-primary/10 p-4 rounded-full group-hover:bg-primary group-hover:text-white transition-colors text-primary">
+                        <div className="flex-shrink-0 bg-primary/10 dark:bg-primary/20 p-4 rounded-full group-hover:bg-primary group-hover:text-white transition-colors text-primary dark:text-primary-light">
                             <GraduationCap className="h-8 w-8" aria-hidden="true" />
                         </div>
                         <div className="flex-1 min-w-0 text-left">
                             <span className="absolute inset-0" aria-hidden="true" />
-                            <p className="text-xl font-bold text-slate-900">Students</p>
-                            <p className="text-sm text-slate-500 mt-1">View and manage enrolled students</p>
+                            <p className="text-xl font-bold text-slate-900 dark:text-white">Students</p>
+                            <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">View and manage enrolled students</p>
                         </div>
                     </button>
 
                     <button
                         onClick={() => setViewMode('staff')}
-                        className="relative rounded-lg border border-slate-300 bg-white px-6 py-8 shadow-sm flex items-center space-x-4 hover:border-indigo-500 hover:ring-1 hover:ring-indigo-500 focus:outline-none transition-all group"
+                        className="relative rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-6 py-8 shadow-sm flex items-center space-x-4 hover:border-indigo-500 hover:ring-1 hover:ring-indigo-500 focus:outline-none transition-all group"
                     >
-                        <div className="flex-shrink-0 bg-indigo-500/10 p-4 rounded-full group-hover:bg-indigo-500 group-hover:text-white transition-colors text-indigo-500">
+                        <div className="flex-shrink-0 bg-indigo-500/10 p-4 rounded-full group-hover:bg-indigo-500 group-hover:text-white transition-colors text-indigo-500 dark:text-indigo-400">
                             <Users className="h-8 w-8" aria-hidden="true" />
                         </div>
                         <div className="flex-1 min-w-0 text-left">
                             <span className="absolute inset-0" aria-hidden="true" />
-                            <p className="text-xl font-bold text-slate-900">Staff</p>
-                            <p className="text-sm text-slate-500 mt-1">View and manage teaching and administrative personnel</p>
+                            <p className="text-xl font-bold text-slate-900 dark:text-white">Staff</p>
+                            <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">View and manage teaching and administrative personnel</p>
                         </div>
                     </button>
                 </div>
             ) : (
                 <div className="flex flex-col space-y-4">
-                    {/* Students view - Batch Selection */}
+                    {/* Students view - Dual Filtering */}
                     {viewMode === 'students' && (
-                        <div className="flex justify-end">
-                            <div className="w-64">
+                        <div className="flex flex-wrap gap-4 mb-4 justify-end">
+                            <div className="w-full sm:w-64">
+                                <label htmlFor="department" className="sr-only">Select Department</label>
+                                <select
+                                    id="department"
+                                    name="department"
+                                    className="block w-full pl-3 pr-10 py-2 text-base border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-primary focus:border-primary sm:text-sm rounded-md shadow-sm"
+                                    value={selectedDeptForStudents || ''}
+                                    onChange={(e) => {
+                                        setSelectedDeptForStudents(e.target.value || null);
+                                        setSelectedBatch(''); // reset batch when dept changes
+                                    }}
+                                >
+                                    <option value="">All Departments</option>
+                                    {departments.map(dept => (
+                                        <option key={dept.id} value={dept.id}>{dept.name}</option>
+                                    ))}
+                                </select>
+                            </div>
+                            <div className="w-full sm:w-64">
                                 <label htmlFor="batch" className="sr-only">Select Batch</label>
                                 <select
                                     id="batch"
                                     name="batch"
-                                    className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-slate-300 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm rounded-md shadow-sm"
+                                    className="block w-full pl-3 pr-10 py-2 text-base border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-primary focus:border-primary sm:text-sm rounded-md shadow-sm"
                                     value={selectedBatch}
                                     onChange={(e) => setSelectedBatch(e.target.value)}
                                 >
@@ -161,12 +194,11 @@ export default function UserDirectory() {
                             </div>
                         </div>
                     )}
-
                     <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                         <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
-                            <div className="shadow overflow-hidden border-b border-slate-200 sm:rounded-lg">
-                                <table className="min-w-full divide-y divide-slate-200">
-                                    <thead className="bg-slate-50">
+                            <div className="shadow overflow-hidden border-b border-slate-200 dark:border-slate-700 sm:rounded-lg">
+                                <table className="min-w-full divide-y divide-slate-200 dark:divide-slate-700">
+                                    <thead className="bg-slate-50 dark:bg-slate-900/50">
                                         <tr>
                                             <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Name</th>
                                             <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Hierarchy Tag</th>
@@ -175,13 +207,14 @@ export default function UserDirectory() {
                                             <th scope="col" className="relative px-6 py-3"><span className="sr-only">Actions</span></th>
                                         </tr>
                                     </thead>
-                                    <tbody className="bg-white divide-y divide-slate-200">
+                                    <tbody className="bg-white dark:bg-slate-800 divide-y divide-slate-200 dark:divide-slate-700">
                                         {visibleUsers.map((person) => (
                                             <tr
                                                 key={person.id}
-                                                className="hover:bg-slate-50 transition-colors cursor-pointer"
+                                                className="hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors cursor-pointer"
                                                 onClick={() => setSelectedUserProfile(person)}
                                             >
+                                                {/* Same student row rendering for staff view */}
                                                 <td className="px-6 py-4 whitespace-nowrap">
                                                     <div className="flex items-center">
                                                         <div className="flex-shrink-0 h-10 w-10">
@@ -190,25 +223,25 @@ export default function UserDirectory() {
                                                             </div>
                                                         </div>
                                                         <div className="ml-4">
-                                                            <div className="text-sm font-medium text-slate-900">{person.profile_data?.name || person.name || person.email.split('@')[0]}</div>
-                                                            <div className="text-sm text-slate-500">{person.email}</div>
+                                                            <div className="text-sm font-medium text-slate-900 dark:text-white">{person.profile_data?.name || person.name || person.email.split('@')[0]}</div>
+                                                            <div className="text-sm text-slate-500 dark:text-slate-400">{person.email}</div>
                                                         </div>
                                                     </div>
                                                 </td>
                                                 <td className="px-6 py-4 whitespace-nowrap">
-                                                    <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-indigo-100 text-indigo-800 border border-indigo-200">
+                                                    <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-indigo-100 text-indigo-800 dark:bg-indigo-900/30 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800">
                                                         {person.tag}
                                                     </span>
                                                     {person.tag === 'Student' && person.batch && (
-                                                        <span className="ml-2 px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800 border border-blue-200">
+                                                        <span className="ml-2 px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300 border border-blue-200 dark:border-blue-800">
                                                             {person.batch}
                                                         </span>
                                                     )}
                                                 </td>
-                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-500">
+                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-500 dark:text-slate-400">
                                                     {getDepartmentName(person.department_id || person.department)}
                                                 </td>
-                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-500">
+                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-500 dark:text-slate-400">
                                                     {person.status === 'Active' ? (
                                                         <span className="flex items-center text-green-600 font-medium"><UserCheck className="w-4 h-4 mr-1" /> Active</span>
                                                     ) : (
@@ -236,7 +269,7 @@ export default function UserDirectory() {
                 </div>
             )}
 
-            <AddUserModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onAdd={handleAddUser} />
+            <AddUserModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onAdd={handleAddUser} fixedTag={viewMode === 'students' ? 'Student' : undefined} />
             <UserProfileDetails
                 isOpen={!!selectedUserProfile}
                 onClose={() => setSelectedUserProfile(null)}
